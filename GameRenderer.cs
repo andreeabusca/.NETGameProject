@@ -12,6 +12,7 @@ public unsafe class GameRenderer
     private Renderer* _renderer;
     private GameCamera _camera;
     private  GameWindow _window;
+    private Rectangle<int> _worldBounds;
     private Dictionary<int,IntPtr> _textures = new();
     private int _id = 0;
 
@@ -63,10 +64,19 @@ public unsafe class GameRenderer
         return _window.Size;
     }
 
+    public Rectangle<int> GetWorld()
+    {
+        return _worldBounds;
+    }
+
     public void Clear() => _sdl.RenderClear(_renderer);
     public void Present() => _sdl.RenderPresent(_renderer);
      public void SetCamera(int x, int y) => _camera.LookAt(x,y);
-     public void SetWorld(Rectangle<int> bounds) => _camera.SetWorldBounds(bounds);
+     public void SetWorld(Rectangle<int> bounds)
+    {
+        _camera.SetWorldBounds(bounds);
+        _worldBounds = bounds;
+    }
      public Vector2D<int> ScreenToWorld(int x, int y) => _camera.ToWorld(x,y);
 
 }

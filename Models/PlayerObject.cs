@@ -4,7 +4,7 @@ namespace TheAdventure.Models;
 
 public class PlayerObject: GameObject
 {
-    public int X = 200;
+    public int X = 0;
     public int Y = 0;
     public int HP = 7;
     private int _texture;
@@ -15,6 +15,9 @@ public class PlayerObject: GameObject
     private double _time;
     private const int Speed = 200;
     private bool _isAttacking = false;
+    public bool _didDamage { get; set; } = false;
+    private bool _isGrounded = true;
+    private double _verticalVelocity = 0;
     private int _attackType = 0;
     public Rectangle<int> Dest;
     private readonly GameRenderer _renderer;
@@ -24,26 +27,48 @@ public class PlayerObject: GameObject
     {
         _renderer = renderer;
         _groundY = groundY;
-        _texture = renderer.LoadTexture(@"Assets\Run.png", out var tex);
+        _texture = renderer.LoadTexture(@"Assets\Karasu_tengu\Run.png", out var tex);
         _frames = 8;
         _sheet = new SpriteSheet(tex.Width, tex.Height,_frames,1);
+        X = 0;
+        Y = _groundY - _sheet.FrameHeight;
         Dest = new Rectangle<int>(X,Y,_sheet.FrameWidth,_sheet.FrameHeight);
     }
 
-    public void Update(bool left, bool right, double dt, bool attack)
+    public void Update(bool left, bool right, bool up, double dt, bool attack)
     {
        double move = Speed * (dt / 1000);
         if (!_isAttacking)
         {
             if(left)X -= (int)move;
             if(right)X += (int)move;
+            if(up && _isGrounded)
+            {
+                _verticalVelocity = -800;
+                _isGrounded = false;
+            }
+        }
+
+        if (!_isGrounded)
+        {
+            _verticalVelocity += 2000 * (dt / 1000.0);
+            Y += (int)(_verticalVelocity * (dt / 1000));
+        }
+
+        int playerFeetY = Y + _sheet.FrameHeight;
+        if(playerFeetY >= _groundY)
+        {
+            Y = _groundY - _sheet.FrameHeight;
+            _isGrounded = true;
+            _verticalVelocity = 0;
         }
 
         if(attack && !_isAttacking)
         {
             _isAttacking = true;
+            _didDamage = false;
             _attackType = Random.Shared.Next(1,4);
-            string file = $@"Assets\Attack_{_attackType}.png";
+            string file = $@"Assets\Karasu_tengu\Attack_{_attackType}.png";
             _texture = _renderer.LoadTexture(file,out var tex);
             _frames = _attackType switch
             {
@@ -68,13 +93,37 @@ public class PlayerObject: GameObject
                 if (_isAttacking)
                 {
                     _isAttacking = false;
-                    _texture = _renderer.LoadTexture(@"Assets\Run.png", out var tex);
+                    _texture = _renderer.LoadTexture(@"Assets\Karasu_tengu\Run.png", out var tex);
                     _sheet = new SpriteSheet(tex.Width,tex.Height,8,1);
                     _frames = 8;
                 }
             }
         }
-        Dest = new Rectangle<int>(X,_groundY - _sheet.FrameHeight,_sheet.FrameWidth,_sheet.FrameHeight);
+
+        var world = _renderer.GetWorld();
+        if(X < world.Origin.X)
+        {
+            X = world.Origin.X;
+        }
+        if(X + _sheet.FrameWidth > world.Size.X)
+        {
+            X = world.Size.X - _sheet.FrameWidth;
+        }
+        if(Y < 0)
+        {
+            Y = 0;
+        }
+        Dest = new Rectangle<int>(X,Y,_sheet.FrameWidth,_sheet.FrameHeight);
+    }
+
+     public void Die()
+    {
+        _isAttacking = false;
+        _texture = _renderer.LoadTexture(@"Assets\Karasu_tengu\Dead.png", out var tex);
+        _frames = 6;
+        _sheet = new SpriteSheet(tex.Width, tex.Height, _frames, 1);
+        _current_Frame = 0;
+        _time = 0;
     }
 
     public void Render(GameRenderer renderer)

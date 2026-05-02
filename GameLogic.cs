@@ -8,7 +8,8 @@ public class GameLogic
     private readonly GameRenderer _renderer;
     private Dictionary<int, GameObject> _objects = new();
     private PlayerObject _player = null!;
-    private KnightObject _knight = null!;
+    private EnemyObject _enemy = null!;
+    private bool _gameOver = false;
     private int _bgTexture;
     private Rectangle<int> _bgRect;
     private int _groundY;
@@ -24,22 +25,26 @@ public class GameLogic
         _bgRect = new Rectangle<int>(0,0,bg.Width,bg.Height);
         _renderer.SetWorld(new Rectangle<int>(0,0,bg.Width,bg.Height));
         var screen = _renderer.GetWindowSize();
-        _groundY = screen.Height - 100;
+        _groundY = screen.Height - 10;
         _player = new PlayerObject(_renderer, _groundY);
-        _knight = new KnightObject(_renderer, _groundY);
+        _enemy = new EnemyObject(_renderer, _groundY);
     }
 
-    public void UpdatePlayer( bool l, bool r, double dt, bool a)
+    public void UpdatePlayer( bool l, bool r, bool u, double dt, bool a)
     {
-        _player.Update(l,r,dt,a);
+        _player.Update(l,r,u,dt,a);
     }
 
     public void RenderFrame(double dt)
     {
+
+        if (_gameOver)
+        {
+            return;
+        }
         var screen = _renderer.GetWindowSize();
         var dst = new Rectangle<int>(0,0,screen.Width,screen.Height);
         _renderer.Clear();
-         //_renderer.SetCamera(_player.X,_player.Y);
         _renderer.RenderTextureUI(_bgTexture,_bgRect,dst);
 
         List<int> remove = new();
@@ -60,31 +65,38 @@ public class GameLogic
             _objects.Remove(id);
         }
 
-        _knight.Update(dt);
-        if(Collides(_player.Dest, _knight.Dest))
+        _enemy.Update(dt);
+        if(Collides(_player.Dest, _enemy.Dest))
         {
-            if (_player.IsAttacking)
+            if (_player.IsAttacking && !_player._didDamage)
             {
-                _knight.HP--;
+                _enemy.HP--;
+                _player._didDamage = true;
+                Console.WriteLine($"Enemy HP: {_enemy.HP}");
+                if(_enemy.HP <= 0)
+                {
+                    _enemy.Die();
+                    Console.WriteLine("YOU WIN");
+                    _gameOver = true;
+                }
             }
 
-            if (_knight.IsAttacking)
+            if (_enemy.IsAttacking && !_enemy._didDamage)
             {
                 _player.HP--;
+                _enemy._didDamage = true;
+                Console.WriteLine($"Player HP: {_player.HP}");
+                if(_player.HP <= 0)
+                {
+                    _player.Die();
+                    Console.WriteLine("GAME OVER. YOU LOSE");
+                    _gameOver = true;
+                }
             }
         }
 
-        if(_player.HP <= 0)
-        {
-            Console.WriteLine("GAME OVER");
-        }
 
-        if(_knight.HP <= 0)
-        {
-            Console.WriteLine("YOU WIN");
-        }
-
-        _knight.Render(_renderer);
+        _enemy.Render(_renderer);
         _player.Render(_renderer);
         _renderer.Present();
     }

@@ -16,7 +16,7 @@ public class GameWindow
          unsafe
         {
             _window = (IntPtr)sdl.CreateWindow(
-                "DragonAnnoysKnights", Sdl.WindowposUndefined, Sdl.WindowposUndefined, 1000, 600,
+                "CrowFightsFox", Sdl.WindowposUndefined, Sdl.WindowposUndefined, 711, 400,
                 (uint)WindowFlags.Resizable);
 
         }

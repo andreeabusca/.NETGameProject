@@ -34,9 +34,10 @@ public class InputLogic
         var keys = _sdl.GetKeyboardState(null);
         bool left = keys[(int)KeyCode.Left] == 1 ? true : false;
         bool right = keys[(int)KeyCode.Right] == 1 ? true : false;
+        bool up = keys[(int)KeyCode.Up] == 1 ? true : false;
         bool attack = keys[(int)KeyCode.Tab] == 1 ? true : false;
 
-        _logic.UpdatePlayer(left,right,dt,attack);
+        _logic.UpdatePlayer(left,right,up,dt,attack);
 
         return false;
 
