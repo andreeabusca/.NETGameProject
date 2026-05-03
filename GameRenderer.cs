@@ -18,11 +18,11 @@ public unsafe class GameRenderer
 
     public GameRenderer(Sdl sdl, GameWindow window)
     {
-    _sdl = sdl;
-    _renderer = (Renderer*)window.CreateRenderer();
-    _window = window;
-    var size = window.Size;
-    _camera = new GameCamera(size.Width, size.Height);
+        _sdl = sdl;
+        _renderer = (Renderer*)window.CreateRenderer();
+        _window = window;
+        var size = window.Size;
+        _camera = new GameCamera(size.Width, size.Height);
     }
 
     public int LoadTexture(string file, out TextureData data)
@@ -71,13 +71,13 @@ public unsafe class GameRenderer
 
     public void Clear() => _sdl.RenderClear(_renderer);
     public void Present() => _sdl.RenderPresent(_renderer);
-     public void SetCamera(int x, int y) => _camera.LookAt(x,y);
-     public void SetWorld(Rectangle<int> bounds)
+    public void SetCamera(int x, int y) => _camera.LookAt(x,y);
+    public void SetWorld(Rectangle<int> bounds)
     {
         _camera.SetWorldBounds(bounds);
         _worldBounds = bounds;
     }
-     public Vector2D<int> ScreenToWorld(int x, int y) => _camera.ToWorld(x,y);
+    public Vector2D<int> ScreenToWorld(int x, int y) => _camera.ToWorld(x,y);
 
 }
 

@@ -13,6 +13,7 @@ public class GameWindow
     {
         _sdl = sdl;
 
+        // Creates window using SDL 
          unsafe
         {
             _window = (IntPtr)sdl.CreateWindow(

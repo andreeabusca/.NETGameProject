@@ -3,6 +3,7 @@ using Silk.NET.Maths;
 
 namespace TheAdventure.Models;
 
+// Handles splitting a texture into animation frames
 public class SpriteSheet
 {
     private readonly int _columns;
@@ -14,10 +15,13 @@ public class SpriteSheet
     {
         _columns = columns;
         _rows = rows; 
+        
+        // Calculates size of each frame
         _frameWidth = textureWidth / columns;
         _frameHeight = textureHeight / rows;
     }
 
+    // Returns rectangle of a specified animation frame
     public Rectangle<int> GetFrame(int frame, int row)
     {
         int col = frame % _columns;
