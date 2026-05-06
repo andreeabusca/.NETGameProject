@@ -103,5 +103,3 @@ When the game ends:
 - The game stops updating
 
 ---
-
-## 🧱 Project Structure
