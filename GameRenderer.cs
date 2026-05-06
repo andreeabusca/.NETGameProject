@@ -27,21 +27,30 @@ public unsafe class GameRenderer
 
     public int LoadTexture(string file, out TextureData data)
     {
+        // Loads image using ImageSharp to access pixel data
         using var img = Image.Load<Rgba32>(file);
+
+        // Converts image pixels to a byte array compatible with SDL
         data = new TextureData { Width = img.Width, Height = img.Height};
         byte[] raw = new byte[data.Width * data.Height * 4];
         img.CopyPixelDataTo(raw);
 
         fixed(byte* ptr = raw)
         {
+            // Creates SDL surface from pixel data
             var surf = _sdl.CreateRGBSurfaceWithFormatFrom(ptr, data.Width, data.Height, 32, data.Width*4, (uint)PixelFormatEnum.Rgba32);
+            
+            // Creates texture 
             var tex = _sdl.CreateTextureFromSurface(_renderer, surf);
+            
+            // Cleans up temporary surface 
             _sdl.FreeSurface(surf);
             _textures[_id] = (IntPtr)tex;
-            return _id++;
+            return _id++; // returns unique Id assigned to texture
         }
     }
 
+    // Renders player and enemy textures
     public void RenderTexture(int id, Rectangle<int> src, Rectangle<int> dst)
     {
         if(_textures.TryGetValue(id, out var tex))
@@ -51,6 +60,7 @@ public unsafe class GameRenderer
         }
     }
 
+    // Renders background texture
      public void RenderTextureUI(int id, Rectangle<int> src, Rectangle<int> dst)
     {
         if(_textures.TryGetValue(id, out var tex))
@@ -69,9 +79,15 @@ public unsafe class GameRenderer
         return _worldBounds;
     }
 
+    // Cleans screen for next frame
     public void Clear() => _sdl.RenderClear(_renderer);
+
+    // Displays the rendered frame to the user
     public void Present() => _sdl.RenderPresent(_renderer);
+
+    // Update camera coordonates
     public void SetCamera(int x, int y) => _camera.LookAt(x,y);
+    
     public void SetWorld(Rectangle<int> bounds)
     {
         _camera.SetWorldBounds(bounds);

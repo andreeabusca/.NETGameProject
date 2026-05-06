@@ -16,6 +16,7 @@ public class InputLogic
         _logic = logic;
     }
 
+    // Checks user inputs
     public unsafe bool Process()
     {
         Event ev = new();

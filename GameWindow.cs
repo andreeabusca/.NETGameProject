@@ -22,6 +22,7 @@ public class GameWindow
 
         }
 
+        // Verifies if window was created successfully
         if (_window == IntPtr.Zero)
         {
             var ex = sdl.GetErrorAsException();
@@ -39,6 +40,7 @@ public class GameWindow
         return renderer;
     }
 
+    // Gets current dimesions of the winndow from SDL
     public unsafe (int Width, int Height) Size
     {
         get
