@@ -6,13 +6,13 @@ namespace TheAdventure;
 public class GameLogic
 {
     private readonly GameRenderer _renderer;
+    private HPRenderer _hp = null!;
     private int _bgTexture;
     private Rectangle<int> _bgRect;
     private int _groundY;
     private PlayerObject _player = null!;
     private EnemyObject _enemy = null!;
     private bool _gameOver = false;
-    private Dictionary<int, GameObject> _objects = new();
 
     public GameLogic(GameRenderer renderer)
     {
@@ -25,6 +25,8 @@ public class GameLogic
         _bgTexture = _renderer.LoadTexture(@"Assets\2304x1296.png", out var bg);
         _bgRect = new Rectangle<int>(0,0,bg.Width,bg.Height);
         _renderer.SetWorld(new Rectangle<int>(0,0,bg.Width,bg.Height));
+        // Loads hp texture 
+        _hp = new HPRenderer(_renderer);
         var screen = _renderer.GetWindowSize();
         // Computes ground Y coordonate in relation with background size
         _groundY = screen.Height - 10;
@@ -54,24 +56,6 @@ public class GameLogic
         // Clears screen and draws background
         _renderer.Clear();
         _renderer.RenderTextureUI(_bgTexture,_bgRect,dst);
-
-        List<int> remove = new();
-
-        foreach(var obj in _objects.Values.OfType<RenderableGameObject>())
-        {
-            if (!obj.Update(dt))
-            {
-                remove.Add(obj.Id);
-            }
-            else
-            {
-                obj.Render(_renderer);
-            }
-        }
-        foreach (var id in remove)
-        {
-            _objects.Remove(id);
-        }
 
         // Updates enemy state
         _enemy.Update(dt);
@@ -117,6 +101,9 @@ public class GameLogic
         // Renders enemy and player
         _enemy.Render(_renderer);
         _player.Render(_renderer);
+
+        // Renders enemy and player hp icons
+        _hp.RenderLives(_player, _enemy);
         _renderer.Present();
     }
 
