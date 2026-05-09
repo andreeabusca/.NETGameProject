@@ -2,7 +2,7 @@
 
 A simple 2D fighting game built using C#.  
 The player controls a crow warrior and battles a fox.
-
+<img width="719" height="436" alt="Captură ecran (586)" src="https://github.com/user-attachments/assets/9e0cc636-84f6-429c-a22a-2e1cb75d4d8b" />
 ---
 
 ## Gameplay Overview
@@ -20,7 +20,7 @@ CrowFightsFox is a side-view fighting game where the objective is to defeat the 
 - Move left and right
 - Jump with gravity-based physics
 - Perform attacks with different animations
-- Has **7 HP**
+- Has **7 HP**, (displayed as 7 flowers that dissapear after each hit)
 
 ---
 
@@ -29,7 +29,7 @@ CrowFightsFox is a side-view fighting game where the objective is to defeat the 
 - Moves automatically left and right
 - Changes direction at screen edges
 - Randomly performs attacks
-- Has **3 HP**
+- Has **3 HP**,  (displayed as 7 flowers that dissapear after each hit)
 
 ---
 
