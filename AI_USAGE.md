@@ -3,7 +3,7 @@
 This document outlines the the role of AI tools during the development stage of the project.
 
 ## Tools:
-- **ChatGPT (Free Version, 5.3-min)**: chat-based code suggestions, rubber-ducking
+- **ChatGPT (Free Version, 5.3-mini)**: chat-based code suggestions, rubber-ducking
 - **Gemini (Free Version, Gemini for Students )**: alternative chat-based code suggestions rubber-ducking (when ChatGPT did not provide good suggestions)
 
 ## Usage Methods
