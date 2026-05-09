@@ -1,17 +1,18 @@
 using Silk.NET.Maths;
+using TheAdventure.Interfaces;
 
 namespace TheAdventure.Models;
 
 // Player character, a crow
 // Class handles movement, jumps, attack logic, animation, and rendering.
-public class PlayerObject: GameObject
+public class PlayerObject: GameObject, IDamageable
 {
     // Character position when game starts
     public int X = 0;
     public int Y = 0;
 
     // Player health
-    public int HP = 7;
+    public int HP { get; set; }= 7;
 
     // data necessary for jumps
     private bool _isGrounded = true;
@@ -71,14 +72,18 @@ public class PlayerObject: GameObject
             if(right)X += (int)move;
 
             // Jumps
+            // AI-generated
             if(up && _isGrounded)
             {
                 _verticalVelocity = -800;
                 _isGrounded = false;
             }
+            // end AI-generated
         }
 
         // Returns to ground
+
+        // AI-generated
         if (!_isGrounded)
         {
             _verticalVelocity += 2000 * (dt / 1000.0);
@@ -93,6 +98,7 @@ public class PlayerObject: GameObject
             _isGrounded = true;
             _verticalVelocity = 0;
         }
+        // end AI-generated
 
         // Starts attack by choosing random player attack type sprite
         if(attack && !_isAttacking)

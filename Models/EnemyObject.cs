@@ -1,17 +1,18 @@
 using Silk.NET.Maths;
+using TheAdventure.Interfaces;
 
 namespace TheAdventure.Models;
 
 // Enemy character, a fox
 // Class handles movement, attack logic, animation, and rendering.
-public class EnemyObject: GameObject
+public class EnemyObject: GameObject, IDamageable
 {
     // Character position when game starts
     public int X = 350;
     public int Y = 0;
     
     // Enemy health
-    public int HP = 3;
+    public int HP {get; set; } = 3;
 
     // Ground level reference
     private int _groundY;
@@ -67,7 +68,10 @@ public class EnemyObject: GameObject
         if(!_attacking )
         {
             // Enemy moves by modifying X coordonate
+            
+            // AI-generated
             X += (int)(Speed * (dt / 1000.0) * _direction);
+            // end AI-generated
 
             // Change direction when reaching screen edges
             if(X < world.Origin.X)

@@ -37,7 +37,9 @@ public class HPRenderer
             var src = new Rectangle<int>(0,0,_lifeTextureData.Width,_lifeTextureData.Height);
 
             // Specifies place on screen to put hp icon
+            // AI-generated
             var dst = new Rectangle<int>(margin + i * (hpSize + padding), margin, hpSize,hpSize);
+            // end AI-generated
 
             _renderer.RenderTextureUI(_lifeTexture,src,dst);
         }
@@ -49,8 +51,10 @@ public class HPRenderer
             var src = new Rectangle<int>(0,0,_lifeTextureData.Width,_lifeTextureData.Height);
 
             //Specifies place on screen to put hp icon
+            // AI-generated
             var dst = new Rectangle<int>(screen.Width - hpSize - margin - (i  * (hpSize + padding)), margin, hpSize,hpSize);
-
+            // AI-generated
+            
             _renderer.RenderTextureUI(_lifeTexture,src,dst);
         }
 

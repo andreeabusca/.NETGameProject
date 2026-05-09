@@ -20,6 +20,7 @@ while (!quit)
     logic.RenderFrame(16); // updates and renders
     System.Threading.Thread.Sleep(13); // limits FPS
 }
+renderer.Dispose(); // destroys all textures before closing game
 sdl.Quit();
 
 

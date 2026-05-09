@@ -22,6 +22,7 @@ public class SpriteSheet
     }
 
     // Returns rectangle of a specified animation frame
+    // AI-generated
     public Rectangle<int> GetFrame(int frame, int row)
     {
         int col = frame % _columns;
@@ -29,6 +30,7 @@ public class SpriteSheet
             col * _frameWidth, row * _frameHeight, _frameWidth, _frameHeight
         );
     }
+    // end AI-generated
 
     public int FrameWidth => _frameWidth;
     public int FrameHeight => _frameHeight;

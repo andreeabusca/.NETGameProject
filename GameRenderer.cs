@@ -6,7 +6,7 @@ using TheAdventure;
 using TheAdventure.Models;
 using System.Numerics;
 
-public unsafe class GameRenderer
+public unsafe class GameRenderer: IDisposable
 {
     private Sdl _sdl;
     private Renderer* _renderer;
@@ -67,6 +67,16 @@ public unsafe class GameRenderer
         {
              _sdl.RenderCopy(_renderer, (Texture*)tex, in src, in dst);
         }
+    }
+
+    public void Dispose()
+    {
+        foreach(var texture in _textures.Values)
+        {
+            _sdl.DestroyTexture((Texture*)texture);
+        }
+
+        _textures.Clear();
     }
 
     public (int Width, int Height) GetWindowSize()

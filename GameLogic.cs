@@ -6,12 +6,15 @@ namespace TheAdventure;
 public class GameLogic
 {
     private readonly GameRenderer _renderer;
+    private readonly SaveService _saveService = new();
     private HPRenderer _hp = null!;
     private int _bgTexture;
     private Rectangle<int> _bgRect;
     private int _groundY;
     private PlayerObject _player = null!;
     private EnemyObject _enemy = null!;
+    private int _score = 0;
+    private int _lastScore = 0;
     private bool _gameOver = false;
 
     public GameLogic(GameRenderer renderer)
@@ -33,6 +36,8 @@ public class GameLogic
         //Creates player and enemy objects
         _player = new PlayerObject(_renderer, _groundY);
         _enemy = new EnemyObject(_renderer, _groundY);
+        _lastScore = _saveService.LoadScore();
+        Console.WriteLine($"Last Obtained Score: {_lastScore}");
     }
 
     public void UpdatePlayer( bool l, bool r, bool u, double dt, bool a)
@@ -66,8 +71,9 @@ public class GameLogic
             // Checks if player is attacking
             if (_player.IsAttacking && !_player._didDamage)
             {
-                // Updates enemy HP
+                // Updates enemy HP and score
                 _enemy.HP--;
+                _score += 3;
                 _player._didDamage = true;
                 Console.WriteLine($"Enemy HP: {_enemy.HP}");
 
@@ -76,6 +82,8 @@ public class GameLogic
                 {
                     _enemy.Die();
                     Console.WriteLine("YOU WIN");
+                    displayScoreComparison();
+                    _saveService.SaveScore(_score);
                     _gameOver = true;
                 }
             }
@@ -83,8 +91,9 @@ public class GameLogic
             // Checks if enemy is attacking 
             if (_enemy.IsAttacking && !_enemy._didDamage)
             {
-                // Updates player HP
+                // Updates player HP and score
                 _player.HP--;
+                _score -= 3;
                 _enemy._didDamage = true;
                 Console.WriteLine($"Player HP: {_player.HP}");
                 
@@ -93,6 +102,8 @@ public class GameLogic
                 {
                     _player.Die();
                     Console.WriteLine("GAME OVER. YOU LOSE");
+                    displayScoreComparison();
+                    _saveService.SaveScore(_score);
                     _gameOver = true;
                 }
             }
@@ -108,11 +119,26 @@ public class GameLogic
     }
 
     // Checks if player and enemy sprites meet at some point
+
+    // AI-generated
     private bool Collides(Rectangle<int> a, Rectangle<int> b)
     {
         return a.Origin.X < b.Origin.X + b.Size.X &&
                a.Origin.X + a.Size.X > b.Origin.X &&
                a.Origin.Y < b.Origin.Y + b.Size.Y &&
                a.Origin.Y + a.Size.Y > b.Origin.Y;
+    }
+    // end AI-generated
+
+    private void displayScoreComparison()
+    {
+         if(_score > _lastScore)
+            {
+                Console.WriteLine("You did better than last time.");
+            }
+            else
+            {
+                 Console.WriteLine("You did worse than last time.");
+            }
     }
 }
